@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Subject, window } from 'rxjs';
+import { Subject} from 'rxjs';
 import { Cart, Payment, Product, User } from '../models/models';
 import { NavigationService } from './navigation.service';
 
@@ -19,8 +19,6 @@ export class UtilityService {
     let finalPrice: number = price - price * (discount / 100);
     return finalPrice;
   }
-
-  // JWT Helper Service : npm install @auth0/angular-jwt
 
   getUser(): User {
     let token = this.jwt.decodeToken();
@@ -71,7 +69,7 @@ export class UtilityService {
     payment.totalAmount = 0;
     payment.amountPaid = 0;
     payment.amountReduced = 0;
-
+//se acumula el precio de todos los productos
     for (let cartitem of cart.cartItems) {
       payment.totalAmount += cartitem.product.price;
 

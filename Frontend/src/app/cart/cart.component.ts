@@ -48,7 +48,7 @@ export class CartComponent implements OnInit {
       .subscribe((res: any) => {
         this.usersCart = res;
 
-        // Calculate Payment
+        //  Payment
         this.utilityService.calculatePayment(
           this.usersCart,
           this.usersPaymentInfo

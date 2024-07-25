@@ -36,6 +36,8 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   submitReview() {
+    //se obtiene el valor de reviewControl, si review esta vacia o es null
+    //saldra error y saldra del metodo
     let review = this.reviewControl.value;
 
     if (review === '' || review === null) {
@@ -54,7 +56,7 @@ export class ProductDetailsComponent implements OnInit {
         this.reviewControl.setValue('');
       });
   }
-
+//agregar las reviews
   fetchAllReviews() {
     this.otherReviews = [];
     this.navigationService

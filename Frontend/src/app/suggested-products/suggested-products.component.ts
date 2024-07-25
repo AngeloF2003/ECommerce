@@ -13,19 +13,21 @@ export class SuggestedProductsComponent implements OnInit {
     category: '',
     subCategory: '',
   };
-  @Input() count: number = 10;
+  @Input() count: number = 3;
   products: Product[] = [];
 
   constructor(private navigationService: NavigationService) {}
 
   ngOnInit(): void {
     this.navigationService
+    //se llama al metodo, y se pasa los argumentos para obtener los productos
     .getProducts(
       this.category.category,
       this.category.subCategory,
       this.count
     )
-    .subscribe((res: any[]) => {
+    //recorre el array, por cada producto recibido, se añade a la propiedad products
+    .subscribe((res: Product[]) => {
       for (let product of res) {
         this.products.push(product);
       }
