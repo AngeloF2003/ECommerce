@@ -21,6 +21,7 @@ import { LoginComponent } from './login/login.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { JwtModule } from '@auth0/angular-jwt';
     OpenProductDetailsDirective,
     RegisterComponent,
     LoginComponent,
+    AdminComponent,
   ],
   imports: [
     BrowserModule,
