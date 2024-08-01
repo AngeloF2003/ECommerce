@@ -10,7 +10,7 @@ import { ProductsComponent } from './products/products.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { CartComponent } from './cart/cart.component';
 import { OrderComponent } from './order/order.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -18,10 +18,14 @@ import { OpenProductsDirective } from './directives/open-products.directive';
 import { OpenProductDetailsDirective } from './directives/open-product-details.directive';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AdminComponent } from './admin/admin.component';
+import { ProductFormComponent } from './productscrud/product-form.component';
+import { ProductListComponent } from './productscrud/product-list.component';
+import { ProductService } from './productscrud/product.service';
+import { AuthInterceptor } from './productscrud/auth';
 
 @NgModule({
   declarations: [
@@ -41,11 +45,14 @@ import { AdminComponent } from './admin/admin.component';
     RegisterComponent,
     LoginComponent,
     AdminComponent,
+    ProductListComponent,
+    ProductFormComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
     HttpClientModule,
     RouterModule,
     JwtModule.forRoot({
@@ -57,7 +64,8 @@ import { AdminComponent } from './admin/admin.component';
       },
     }),
   ],
-  providers: [],
+  providers: [ProductService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

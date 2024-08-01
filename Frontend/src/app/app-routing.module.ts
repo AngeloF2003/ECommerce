@@ -6,19 +6,24 @@ import { OrderComponent } from './order/order.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { ProductsComponent } from './products/products.component';
+import { ProductListComponent } from './productscrud/product-list.component';
+import { ProductFormComponent } from './productscrud/product-form.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'products', component: ProductsComponent },
+  { path: 'products/new', component: ProductFormComponent },
+  { path: 'products/edit/:id', component: ProductFormComponent },
   { path: 'product-details', component: ProductDetailsComponent },
   { path: 'cart', component: CartComponent },
   { path: 'orders', component: OrderComponent },
+  { path: 'productss', component: ProductListComponent }, // Nota: Considera cambiar el nombre de esta ruta para evitar confusiones
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: '**', component: PageNotFoundComponent },
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

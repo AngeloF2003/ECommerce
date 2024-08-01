@@ -1,0 +1,49 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h2 class="mb-0">{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h2>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="saveProduct()" #productForm="ngForm">
+            <div class="mb-3">
+              <label for="title" class="form-label">Title:</label>
+              <input type="text" id="title" [(ngModel)]="product.title" name="title" class="form-control" placeholder="Enter product title" required>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="price" class="form-label">Price:</label>
+                <input type="number" id="price" [(ngModel)]="product.price" name="price" class="form-control" placeholder="Enter price" step="0.01" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="offer" class="form-label">Offer:</label>
+                <input type="number" id="offer" [(ngModel)]="product.offer.discount" name="offer" class="form-control" placeholder="Enter discount" step="0.01" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="category" class="form-label">Category:</label>
+                <input type="text" id="offer" [(ngModel)]="product.productCategory.category" name="offer" class="form-control" placeholder="Enter discount" step="0.01" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="subCategory" class="form-label">subCategory:</label>
+                <input type="text" id="offer" [(ngModel)]="product.productCategory.subCategory" name="offer" class="form-control" placeholder="Enter discount" step="0.01" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Description:</label>
+              <textarea type="text" id="description" [(ngModel)]="product.description" name="description" class="form-control" placeholder="Enter product description" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="imageUrl" class="form-label">Image URL</label>
+              <input type="text" id="imageUrl" [(ngModel)]="product.imageName" name="imageUrl" class="form-control" placeholder="Enter image URL" required>
+            </div>
+            <div class="d-flex justify-content-between">
+              <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Update' : 'Add' }} Product</button>
+              <a routerLink="/productss" class="btn btn-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

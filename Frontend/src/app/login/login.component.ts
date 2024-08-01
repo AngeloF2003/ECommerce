@@ -16,6 +16,8 @@ import { UtilityService } from '../services/utility.service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   message = '';
+  isLoggedIn = false;
+
   constructor(
     private fb: FormBuilder,
     private navigationService: NavigationService,
@@ -44,6 +46,7 @@ export class LoginComponent implements OnInit {
           this.message = 'Logged In Successfully.';
           this.utilityService.setUser(res.toString());
           console.log(this.utilityService.getUser());
+          this.isLoggedIn = true;
         } else {
           this.message = 'Invalid Credentials!';
         }
