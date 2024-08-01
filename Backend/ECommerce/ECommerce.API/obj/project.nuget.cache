@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "L/r2RDGzfyxMCML72yHOaB7gAWQYKdSPbWj3DIMT4mVDbu0xHTgtXE5+eQtbXLyQ3RsRFo1Ht+iCre0kdCySxA==",
+  "dgSpecHash": "VO5ASKIzbVrzXttioIJjwxJtwZFe6PO8iMRPKKoncehqKeWbwnJb4nAX48XeMBJLfOP7Ia8d9+gQ4lEWk0kG6g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\asantana\\Downloads\\ECommerce\\ECommerce\\ECommerce.API\\ECommerce.API.csproj",
+  "projectFilePath": "C:\\Users\\asantana\\Desktop\\shopping\\ECommerce\\Backend\\ECommerce\\ECommerce.API\\ECommerce.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\asantana\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.8\\microsoft.aspnetcore.authentication.jwtbearer.6.0.8.nupkg.sha512",
     "C:\\Users\\asantana\\.nuget\\packages\\microsoft.aspnetcore.cors\\2.2.0\\microsoft.aspnetcore.cors.2.2.0.nupkg.sha512",

@@ -1,5 +1,6 @@
 ﻿using ECommerce.API.Models;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
@@ -59,7 +60,7 @@ namespace ECommerce.API.DataAccess
             }
         }
 
-            public Cart GetActiveCartOfUser(int userid)
+        public Cart GetActiveCartOfUser(int userid)
         {
             var cart = new Cart();
             using (SqlConnection connection = new(dbconnection))
@@ -454,7 +455,7 @@ namespace ECommerce.API.DataAccess
                 return true;
             }
         }
-      
+
         public int InsertOrder(Order order)
         {
             int value = 0;
@@ -573,7 +574,7 @@ namespace ECommerce.API.DataAccess
                     return false;
                 }
 
-                query = "INSERT INTO Users (FirstName, LastName, Address, Mobile, Email, Password, CreatedAt, ModifiedAt) values (@fn, @ln, @add, @mb, @em, @pwd, @cat, @mat);";
+                query = "INSERT INTO Users (FirstName, LastName, Address, Mobile, Email, Password, CreatedAt, ModifiedAt, IdRole) values (@fn, @ln, @add, @mb, @em, @pwd, @cat, @mat);";
 
                 command.CommandText = query;
                 command.Parameters.Add("@fn", System.Data.SqlDbType.NVarChar).Value = user.FirstName;
@@ -593,6 +594,8 @@ namespace ECommerce.API.DataAccess
         public string IsUserPresent(string email, string password)
         {
             User user = new();
+            RoleType roleType = RoleType.User;
+
             using (SqlConnection connection = new(dbconnection))
             {
                 SqlCommand command = new()
@@ -601,20 +604,25 @@ namespace ECommerce.API.DataAccess
                 };
 
                 connection.Open();
-                string query = "SELECT COUNT(*) FROM Users WHERE Email='" + email + "' AND Password='" + password + "';";
+
+
+                string query = "SELECT COUNT(*) FROM Users WHERE Email = @Email AND Password = @Password";
                 command.CommandText = query;
+                command.Parameters.AddWithValue("@Email", email);
+                command.Parameters.AddWithValue("@Password", password);
+
                 int count = (int)command.ExecuteScalar();
                 if (count == 0)
                 {
-                    connection.Close();
                     return "";
                 }
 
-                query = "SELECT * FROM Users WHERE Email='" + email + "' AND Password='" + password + "';";
+
+                query = "SELECT * FROM Users WHERE Email = @Email AND Password = @Password";
                 command.CommandText = query;
 
                 SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                if (reader.Read())
                 {
                     user.Id = (int)reader["UserId"];
                     user.FirstName = (string)reader["FirstName"];
@@ -625,24 +633,40 @@ namespace ECommerce.API.DataAccess
                     user.Password = (string)reader["Password"];
                     user.CreatedAt = (string)reader["CreatedAt"];
                     user.ModifiedAt = (string)reader["ModifiedAt"];
+                    user.IdRole = (int)reader["IdRole"];
                 }
+                reader.Close();
 
+
+                var roleQuery = "SELECT Cargo FROM Role WHERE IdRole = @IdRole";
+                using (var roleCommand = new SqlCommand(roleQuery, connection))
+                {
+                    roleCommand.Parameters.AddWithValue("@IdRole", user.IdRole);
+                    var roleCargo = roleCommand.ExecuteScalar()?.ToString();
+
+                    if (Enum.TryParse<RoleType>(roleCargo, out var parsedRole))
+                    {
+                        roleType = parsedRole;
+                    }
+                }
                 string key = "MNU66iBl3T5rh6H52i69";
                 string duration = "60";
-                var symmetrickey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-                var credentials = new SigningCredentials(symmetrickey, SecurityAlgorithms.HmacSha256);
+                var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+                var credentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256);
 
                 var claims = new[]
                 {
-                    new Claim("id", user.Id.ToString()),
-                    new Claim("firstName", user.FirstName),
-                    new Claim("lastName", user.LastName),
-                    new Claim("address", user.Address),
-                    new Claim("mobile", user.Mobile),
-                    new Claim("email", user.Email),
-                    new Claim("createdAt", user.CreatedAt),
-                    new Claim("modifiedAt", user.ModifiedAt)
-                };
+            new Claim("id", user.Id.ToString()),
+            new Claim("firstName", user.FirstName),
+            new Claim("lastName", user.LastName),
+            new Claim("address", user.Address),
+            new Claim("mobile", user.Mobile),
+            new Claim("email", user.Email),
+            new Claim("createdAt", user.CreatedAt),
+            new Claim("modifiedAt", user.ModifiedAt),
+            new Claim("idRole", user.IdRole.ToString()),
+            new Claim(ClaimTypes.Role, roleType.ToString())
+        };
 
                 var jwtToken = new JwtSecurityToken(
                     issuer: "localhost",
@@ -653,7 +677,166 @@ namespace ECommerce.API.DataAccess
 
                 return new JwtSecurityTokenHandler().WriteToken(jwtToken);
             }
-            return "";
+        }
+
+
+        public Role GetRoleById(int roleId)
+        {
+            using (var connection = new SqlConnection(dbconnection))
+            {
+                var command = new SqlCommand("SELECT IdRole, Cargo FROM Role WHERE IdRole = @IdRole", connection);
+                command.Parameters.AddWithValue("@IdRole", roleId);
+
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+
+                        var cargoString = reader.GetString(1);
+                        if (Enum.TryParse<RoleType>(cargoString, out var roleType))
+                        {
+                            return new Role
+                            {
+                                IdRole = reader.GetInt32(0),
+                                Cargo = roleType
+                            };
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Invalid role type in the database.");
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+        //--------------------------------------------------------------------------------------------------------------
+
+        public IEnumerable<Product> GetAllProducts()
+        {
+            var products = new List<Product>();
+            using (SqlConnection connection = new SqlConnection(dbconnection))
+            {
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = connection,
+                    CommandText = "SELECT * FROM Products;"
+                };
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    products.Add(new Product
+                    {
+                        Id = (int)reader["ProductId"],
+                        Title = (string)reader["Title"],
+                        Description = (string)reader["Description"],
+                        Price = (double)reader["Price"],
+                        Quantity = (int)reader["Quantity"],
+                        ImageName = (string)reader["ImageName"],
+                        ProductCategory = GetProductCategory((int)reader["CategoryId"]),
+                        Offer = GetOffer((int)reader["OfferId"])
+                    });
+                }
+            }
+            return products;
+        }
+
+        public Product GetProductos(int id)
+        {
+            var product = new Product();
+            using (SqlConnection connection = new SqlConnection(dbconnection))
+            {
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = connection,
+                    CommandText = "SELECT * FROM Products WHERE ProductId=@id;"
+                };
+                command.Parameters.AddWithValue("@id", id);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    product.Id = (int)reader["ProductId"];
+                    product.Title = (string)reader["Title"];
+                    product.Description = (string)reader["Description"];
+                    product.Price = (double)reader["Price"];
+                    product.Quantity = (int)reader["Quantity"];
+                    product.ImageName = (string)reader["ImageName"];
+                    product.ProductCategory = GetProductCategory((int)reader["CategoryId"]);
+                    product.Offer = GetOffer((int)reader["OfferId"]);
+                }
+            }
+            return product;
+        }
+
+        public int InsertProduct(Product product)
+        {
+            using (SqlConnection connection = new SqlConnection(dbconnection))
+            {
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = connection,
+                    CommandText = "INSERT INTO Products (Title, Description, Price, Quantity, ImageName, CategoryId, OfferId) OUTPUT INSERTED.ProductId VALUES (@Title, @Description, @Price, @Quantity, @ImageName, @CategoryId, @OfferId);"
+                };
+
+                command.Parameters.AddWithValue("@Title", product.Title);
+                command.Parameters.AddWithValue("@Description", product.Description);
+                command.Parameters.AddWithValue("@Price", product.Price);
+                command.Parameters.AddWithValue("@Quantity", product.Quantity);
+                command.Parameters.AddWithValue("@ImageName", product.ImageName);
+                command.Parameters.AddWithValue("@CategoryId", product.ProductCategory.Id);
+                command.Parameters.AddWithValue("@OfferId", product.Offer.Id);
+
+                connection.Open();
+                return (int)command.ExecuteScalar();
+            }
+        }
+
+
+        public void UpdateProduct(Product product)
+        {
+            using (SqlConnection connection = new SqlConnection(dbconnection))
+            {
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = connection,
+                    CommandText = "UPDATE Products SET Title=@Title, Description=@Description, Price=@Price, Quantity=@Quantity, ImageName=@ImageName, CategoryId=@CategoryId, OfferId=@OfferId WHERE ProductId=@Id;"
+                };
+
+                command.Parameters.AddWithValue("@Id", product.Id);
+                command.Parameters.AddWithValue("@Title", product.Title);
+                command.Parameters.AddWithValue("@Description", product.Description);
+                command.Parameters.AddWithValue("@Price", product.Price);
+                command.Parameters.AddWithValue("@Quantity", product.Quantity);
+                command.Parameters.AddWithValue("@ImageName", product.ImageName);
+                command.Parameters.AddWithValue("@CategoryId", product.ProductCategory.Id);
+                command.Parameters.AddWithValue("@OfferId", product.Offer.Id);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteProduct(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(dbconnection))
+            {
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = connection,
+                    CommandText = "DELETE FROM Products WHERE ProductId=@id;"
+                };
+                command.Parameters.AddWithValue("@id", id);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
         }
     }
-}
+
+  }

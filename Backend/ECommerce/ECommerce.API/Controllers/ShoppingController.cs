@@ -45,24 +45,49 @@ namespace ECommerce.API.Controllers
         [HttpPost("RegisterUser")]
         public IActionResult RegisterUser([FromBody] User user)
         {
+            
+            var role = dataAccess.GetRoleById(user.IdRole);
+            if (role == null)
+            {
+                return BadRequest("Invalid role ID.");
+            }
+
+            if (role.Cargo != RoleType.Admin && role.Cargo != RoleType.User)
+            {
+                return BadRequest("Unknown role type.");
+            }
+
             user.CreatedAt = DateTime.Now.ToString(DateFormat);
             user.ModifiedAt = DateTime.Now.ToString(DateFormat);
 
+
             var result = dataAccess.InsertUser(user);
 
-            string? message;
-            if (result) message = "inserted";
-            else message = "email not available";
-            return Ok(message);
+            if (result)
+            {
+                
+                return Ok("User registered successfully.");
+            }
+            else
+            {
+                return StatusCode(500, "An error occurred while registering the user.");
+            }
         }
+
 
         [HttpPost("LoginUser")]
         public IActionResult LoginUser([FromBody] User user)
         {
             var token = dataAccess.IsUserPresent(user.Email, user.Password);
-            if (token == "") token = "invalid";
-            return Ok(token);
+
+            if (string.IsNullOrEmpty(token) || token == "invalid")
+            {
+                return Unauthorized("Invalid credentials.");
+            }
+
+            return Ok(new { Token = token });
         }
+
 
         [HttpPost("InsertReview")]
         public IActionResult InsertReview([FromBody] Review review)
@@ -129,5 +154,7 @@ namespace ECommerce.API.Controllers
             var id = dataAccess.InsertOrder(order);
             return Ok(id.ToString());
         }
+
+
     }
 }

@@ -11,5 +11,6 @@
         public string Password { get; set; } = string.Empty;
         public string CreatedAt { get; set; } = string.Empty;
         public string ModifiedAt { get; set; } = string.Empty;
+        public int IdRole { get; set; }
     }
 }

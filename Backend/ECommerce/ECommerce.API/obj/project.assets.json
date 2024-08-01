@@ -1952,11 +1952,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\asantana\\Downloads\\ECommerce\\ECommerce\\ECommerce.API\\ECommerce.API.csproj",
+      "projectUniqueName": "C:\\Users\\asantana\\Desktop\\shopping\\ECommerce\\Backend\\ECommerce\\ECommerce.API\\ECommerce.API.csproj",
       "projectName": "ECommerce.API",
-      "projectPath": "C:\\Users\\asantana\\Downloads\\ECommerce\\ECommerce\\ECommerce.API\\ECommerce.API.csproj",
+      "projectPath": "C:\\Users\\asantana\\Desktop\\shopping\\ECommerce\\Backend\\ECommerce\\ECommerce.API\\ECommerce.API.csproj",
       "packagesPath": "C:\\Users\\asantana\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\asantana\\Downloads\\ECommerce\\ECommerce\\ECommerce.API\\obj\\",
+      "outputPath": "C:\\Users\\asantana\\Desktop\\shopping\\ECommerce\\Backend\\ECommerce\\ECommerce.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
