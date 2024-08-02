@@ -1,49 +1,66 @@
-<div class="container mt-5">
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
-      <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-          <h2 class="mb-0">{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h2>
-        </div>
-        <div class="card-body">
-          <form (ngSubmit)="saveProduct()" #productForm="ngForm">
-            <div class="mb-3">
-              <label for="title" class="form-label">Title:</label>
-              <input type="text" id="title" [(ngModel)]="product.title" name="title" class="form-control" placeholder="Enter product title" required>
-            </div>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="price" class="form-label">Price:</label>
-                <input type="number" id="price" [(ngModel)]="product.price" name="price" class="form-control" placeholder="Enter price" step="0.01" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="offer" class="form-label">Offer:</label>
-                <input type="number" id="offer" [(ngModel)]="product.offer.discount" name="offer" class="form-control" placeholder="Enter discount" step="0.01" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="category" class="form-label">Category:</label>
-                <input type="text" id="offer" [(ngModel)]="product.productCategory.category" name="offer" class="form-control" placeholder="Enter discount" step="0.01" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="subCategory" class="form-label">subCategory:</label>
-                <input type="text" id="offer" [(ngModel)]="product.productCategory.subCategory" name="offer" class="form-control" placeholder="Enter discount" step="0.01" required>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="description" class="form-label">Description:</label>
-              <textarea type="text" id="description" [(ngModel)]="product.description" name="description" class="form-control" placeholder="Enter product description" rows="3" required></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="imageUrl" class="form-label">Image URL</label>
-              <input type="text" id="imageUrl" [(ngModel)]="product.imageName" name="imageUrl" class="form-control" placeholder="Enter image URL" required>
-            </div>
-            <div class="d-flex justify-content-between">
-              <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Update' : 'Add' }} Product</button>
-              <a routerLink="/productss" class="btn btn-secondary">Cancel</a>
-            </div>
-          </form>
-        </div>
+<div class="container">
+  <h2>{{ isEditMode ? 'Edit Product' : 'Add New Product' }}</h2>
+  <form (ngSubmit)="saveProduct()" class="product-form">
+    <!-- Product Title -->
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" [(ngModel)]="product.title" name="title" required />
+    </div>
+
+    <!-- Product Description -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" [(ngModel)]="product.description" name="description" rows="4" required></textarea>
+    </div>
+
+    <!-- Product Price -->
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input type="number" id="price" [(ngModel)]="product.price" name="price" min="0" step="0.01" required />
+    </div>
+
+    <!-- Product Quantity -->
+    <div class="form-group">
+      <label for="quantity">Quantity</label>
+      <input type="number" id="quantity" [(ngModel)]="product.quantity" name="quantity" min="0" required />
+    </div>
+
+    <!-- Product Category -->
+    <div class="form-group">
+      <label for="category">Category</label>
+      <input type="text" id="category" [(ngModel)]="product.productCategory.category" name="category" required />
+    </div>
+
+    <!-- Product Sub-Category -->
+    <div class="form-group">
+      <label for="subCategory">Sub-Category</label>
+      <input type="text" id="subCategory" [(ngModel)]="product.productCategory.subCategory" name="subCategory" required />
+    </div>
+
+    <!-- Product Offer -->
+    <div class="form-group">
+      <label for="offerTitle">Offer Title</label>
+      <input type="text" id="offerTitle" [(ngModel)]="product.offer.title" name="offerTitle" />
+    </div>
+
+    <!-- Offer Discount -->
+    <div class="form-group">
+      <label for="discount">Discount</label>
+      <input type="number" id="discount" [(ngModel)]="product.offer.discount" name="discount" min="0" step="0.01" />
+    </div>
+
+    <!-- Image Upload -->
+    <div class="form-group">
+      <label for="imageUpload" class="image-upload-label">
+        <input type="file" id="imageUpload" (change)="onImageChange($event)" />
+        <span class="upload-text">Upload Image</span>
+      </label>
+      <div *ngIf="product.imageName" class="image-preview">
+        <img [src]="product.imageName" alt="Product Image" />
       </div>
     </div>
-  </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="submit-btn">{{ isEditMode ? 'Update Product' : 'Add Product' }}</button>
+  </form>
 </div>

@@ -1,12 +1,14 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ProductService } from './product.service';
 import { Product } from '../models/models';
-
+import { environment } from 'src/environments/environment';
+import { ProductService } from './product.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-form',
-  templateUrl: './product-form.component.html'
+  templateUrl: './product-form.component.html',
+  styleUrls: ['./product-form.component.css'],
 })
 export class ProductFormComponent implements OnInit {
   product: Product = {
@@ -29,10 +31,14 @@ export class ProductFormComponent implements OnInit {
   };
   isEditMode: boolean = false;
 
+  private imgBBUrl = 'https://api.imgbb.com/1/upload';
+  private imgBBApiKey = environment.IMGBB_API_KEY;
+
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
@@ -42,6 +48,24 @@ export class ProductFormComponent implements OnInit {
       this.productService.getProduct(+productId).subscribe(product => {
         this.product = product;
       });
+    }
+  }
+
+  onImageChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      this.http.post<any>(`${this.imgBBUrl}?key=${this.imgBBApiKey}`, formData)
+        .subscribe(response => {
+          console.log('Image URL:', response.data.url);
+
+          this.product.imageName = response.data.url; // Obtén la URL de la imagen cargada
+          console.log('Image URL:', this.product.imageName);
+        }, error => {
+          console.error('Image upload failed', error);
+        });
     }
   }
 

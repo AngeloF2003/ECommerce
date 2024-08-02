@@ -3,7 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  IMGBB_API_KEY: '9b08982abf97c9a694d68c7bb6976cf5'
 };
 
 /*

@@ -74,7 +74,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  //#region Getters
+  // Getters
   get FirstName(): FormControl {
     return this.registerForm.get('firstName') as FormControl;
   }
@@ -96,5 +96,5 @@ export class RegisterComponent implements OnInit {
   get RPWD(): FormControl {
     return this.registerForm.get('rpwd') as FormControl;
   }
-  //#endregion
+
 }
