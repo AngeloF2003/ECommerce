@@ -72,11 +72,11 @@ export class ProductFormComponent implements OnInit {
   saveProduct(): void {
     if (this.isEditMode) {
       this.productService.updateProduct(this.product.id, this.product).subscribe(() => {
-        this.router.navigate(['/productss']);
+        this.router.navigate(['/admin']);
       });
     } else {
       this.productService.createProduct(this.product).subscribe(() => {
-        this.router.navigate(['/productss']);
+        this.router.navigate(['/admin']);
       });
     }
   }

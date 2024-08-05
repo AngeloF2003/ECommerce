@@ -45,11 +45,11 @@
 
         <div class="card mb-5" *ngFor="let cart of usersPreviousCarts">
             <div class="card-header d-flex fw-bold justify-content-between align-items-center">
-                <span class="time">Ordered On : 
-                    <span class="fs-5">{{cart.orderedOn | date:"dd-MMM-YYYY"}}</span>
+                <span class="time">Ordered On :
+                    <span class="fs-5">{{cart.orderedOn | date:'dd-MMM-YYYY'}}</span>
                 </span>
                 <span class="count">Items: {{cart.cartItems.length}}</span>
-                <span class="price">Price Paid : 
+                <span class="price">Price Paid :
                     <span class="fs-5"> {{utilityService.calculatePricePaid(cart)}} </span>
                 </span>
             </div>

@@ -67,6 +67,7 @@ export class RegisterComponent implements OnInit {
       password: this.PWD.value,
       createdAt: '',
       modifiedAt: '',
+      idRole: 0,
     };
 
     this.navigationService.registerUser(user).subscribe((res: any) => {

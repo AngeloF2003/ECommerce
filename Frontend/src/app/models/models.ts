@@ -18,6 +18,7 @@ export interface User {
   password: string;
   createdAt: string;
   modifiedAt: string;
+  idRole: number;
 }
 
 // #region Product

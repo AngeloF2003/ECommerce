@@ -64,19 +64,20 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  openModal(name: string) {
+  openModal(name: string): void {
     this.container.clear();
-
     let componentType!: Type<any>;
+
     if (name === 'login') {
       componentType = LoginComponent;
       this.modalTitle.nativeElement.textContent = 'Enter Login Information';
-    }
-    if (name === 'register') {
+    } else if (name === 'register') {
       componentType = RegisterComponent;
       this.modalTitle.nativeElement.textContent = 'Enter Register Information';
     }
 
-    this.container.createComponent(componentType);
+    if (componentType) {
+      this.container.createComponent(componentType);
+    }
   }
 }

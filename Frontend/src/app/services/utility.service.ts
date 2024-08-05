@@ -4,6 +4,7 @@ import { Subject} from 'rxjs';
 import { Cart, Payment, Product, User } from '../models/models';
 import { NavigationService } from './navigation.service';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -32,37 +33,70 @@ export class UtilityService {
       password: '',
       createdAt: token.createdAt,
       modifiedAt: token.modifiedAt,
+      idRole: token.idRole
     };
     return user;
   }
+
+
 
   setUser(token: string) {
     localStorage.setItem('user', token);
   }
 
-  isLoggedIn() {
-    return localStorage.getItem('user') ? true : false;
+
+  isLoggedIn(): boolean {
+    const token = localStorage.getItem('user');
+    console.log('Stored token:', token); // Agrega este log
+    if (token) {
+      try {
+        // Verifica que el token esté en el formato correcto
+        if (this.isTokenFormatValid(token)) {
+          return !this.jwt.isTokenExpired(token); // Verifica si el token está expirado
+        } else {
+          console.error('Token format is invalid');
+          return false;
+        }
+      } catch (error) {
+        console.error('Error parsing token:', error);
+        return false;
+      }
+    }
+    return false;
   }
+
+  private isTokenFormatValid(token: string): boolean {
+    const parts = token.split('.');
+    return parts.length === 3;
+  }
+
+
 
   logoutUser() {
     localStorage.removeItem('user');
   }
 
   addToCart(product: Product) {
-    let productid = product.id;
-    let userid = this.getUser().id;
+    let user = this.getUser();
+    if (user) {
+      let productId = product.id;
+      let userId = user.id;
 
-    this.navigationService.addToCart(userid, productid).subscribe((res) => {
-      if (res.toString() === 'inserted') this.changeCart.next(1);
-    });
+      this.navigationService.addToCart(userId, productId).subscribe((res) => {
+        if (res.toString() === 'inserted') this.changeCart.next(1);
+      });
+    }
   }
   removeFromCart(product: Product) {
-    let productid = product.id;
-    let userid = this.getUser().id;
+    let user = this.getUser();
+    if (user) {
+      let productId = product.id;
+      let userId = user.id;
 
-    this.navigationService.removeFromCart(userid, productid).subscribe((res) => {
-      if (res.toString() === 'deleted') this.changeCart.next(-1);
-    });
+      this.navigationService.removeFromCart(userId, productId).subscribe((res) => {
+        if (res.toString() === 'deleted') this.changeCart.next(-1);
+      });
+    }
   }
 
   calculatePayment(cart: Cart, payment: Payment) {
@@ -105,5 +139,18 @@ export class UtilityService {
 
   orderTheCart() {
 
+  }
+  getUserRole(): string | null {
+    let token = localStorage.getItem('user');
+    if (token && !this.jwt.isTokenExpired(token)) {
+      let decodedToken = this.jwt.decodeToken(token);
+      return decodedToken.role;
+    }
+    return null;
+  }
+
+  isUserAdmin() {
+    const user = this.getUser();
+    return user && user.idRole === 1;
   }
 }

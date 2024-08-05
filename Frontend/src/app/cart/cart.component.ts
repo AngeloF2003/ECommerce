@@ -59,7 +59,13 @@ export class CartComponent implements OnInit {
     this.navigationService
       .getAllPreviousCarts(this.utilityService.getUser().id)
       .subscribe((res: any) => {
-        this.usersPreviousCarts = res;
+        this.usersPreviousCarts = res.map((cart: any) => {
+          return {
+            ...cart,
+            orderedOn: new Date(cart.orderedOn)
+          };
+        });
+        console.log('Previous Carts:', res);
       });
   }
 }

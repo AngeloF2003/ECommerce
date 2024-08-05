@@ -36,8 +36,6 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   submitReview() {
-    //se obtiene el valor de reviewControl, si review esta vacia o es null
-    //saldra error y saldra del metodo
     let review = this.reviewControl.value;
 
     if (review === '' || review === null) {
@@ -56,15 +54,52 @@ export class ProductDetailsComponent implements OnInit {
         this.reviewControl.setValue('');
       });
   }
-//agregar las reviews
+
   fetchAllReviews() {
     this.otherReviews = [];
     this.navigationService
       .getAllReviewsOfProduct(this.product.id)
       .subscribe((res: any) => {
         for (let review of res) {
+          review.createdAt = this.convertToISODate(review.createdAt);
           this.otherReviews.push(review);
         }
       });
+  }
+
+  convertToISODate(dateString: string): string {
+    try {
+      const [dayOfWeek, monthDayTime] = dateString.split(', ');
+      const [day, month, time] = monthDayTime.split(' ');
+      const [hour, minute, second] = time.split(':');
+      const months: { [key: string]: number } = {
+        ene: 0,
+        feb: 1,
+        mar: 2,
+        abr: 3,
+        may: 4,
+        jun: 5,
+        jul: 6,
+        ago: 7,
+        sep: 8,
+        oct: 9,
+        nov: 10,
+        dic: 11
+      };
+
+      const monthIndex = months[month];
+      const year = new Date().getFullYear();
+
+      const date = new Date(year, monthIndex, parseInt(day), parseInt(hour), parseInt(minute), parseInt(second));
+
+      if (isNaN(date.getTime())) {
+        throw new Error("Invalid date");
+      }
+
+      return date.toISOString();
+    } catch (error) {
+
+      return new Date().toISOString();
+    }
   }
 }

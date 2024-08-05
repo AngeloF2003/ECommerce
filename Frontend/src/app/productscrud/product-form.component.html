@@ -53,7 +53,7 @@
     <div class="form-group">
       <label for="imageUpload" class="image-upload-label">
         <input type="file" id="imageUpload" (change)="onImageChange($event)" />
-        <span class="upload-text">Upload Image</span>
+        <span class="upload-text btn btn-primary">Upload Image</span>
       </label>
       <div *ngIf="product.imageName" class="image-preview">
         <img [src]="product.imageName" alt="Product Image" />
