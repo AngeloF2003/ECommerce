@@ -6,8 +6,8 @@ import { OrderComponent } from './order/order.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { ProductsComponent } from './products/products.component';
-import { ProductListComponent } from './productscrud/product-list.component';
-import { ProductFormComponent } from './productscrud/product-form.component';
+import { ProductListComponent } from './productscrud/product-list/product-list.component';
+import { ProductFormComponent } from './productscrud/product-form/product-form.component';
 import { AdminGuard } from './services/guard.guard';
 
 const routes: Routes = [

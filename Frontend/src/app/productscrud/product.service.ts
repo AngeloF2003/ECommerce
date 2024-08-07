@@ -28,7 +28,7 @@ import { Offer, Product } from '../models/models';
 
     updateProduct(id: number, product: Product): Observable<Product> {
       return this.http.put<Product>(`${this.apiUrl}/Update/${id}`, product, {
-        headers: { 'Content-Type': 'application/json' }
+
       });
     }
 

@@ -3,6 +3,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Subject} from 'rxjs';
 import { Cart, Payment, Product, User } from '../models/models';
 import { NavigationService } from './navigation.service';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -13,7 +14,8 @@ export class UtilityService {
 
   constructor(
     private navigationService: NavigationService,
-    private jwt: JwtHelperService
+    private jwt: JwtHelperService,
+    private router: Router
   ) {}
 
   applyDiscount(price: number, discount: number): number {
@@ -21,21 +23,34 @@ export class UtilityService {
     return finalPrice;
   }
 
-  getUser(): User {
-    let token = this.jwt.decodeToken();
-    let user: User = {
-      id: token.id,
-      firstName: token.firstName,
-      lastName: token.lastName,
-      address: token.address,
-      mobile: token.mobile,
-      email: token.email,
-      password: '',
-      createdAt: token.createdAt,
-      modifiedAt: token.modifiedAt,
-      idRole: token.idRole
-    };
-    return user;
+  // getUser(): User {
+  //   let token = this.jwt.decodeToken();
+  //   let user: User = {
+  //     id: token.id,
+  //     firstName: token.firstName,
+  //     lastName: token.lastName,
+  //     address: token.address,
+  //     mobile: token.mobile,
+  //     email: token.email,
+  //     password: '',
+  //     createdAt: token.createdAt,
+  //     modifiedAt: token.modifiedAt,
+  //     idRole: token.idRole
+  //   };
+  //   return user;
+  // }
+  getUser() {
+    const token = localStorage.getItem('token');
+    if (token && !this.jwt.isTokenExpired(token)) {
+      try {
+        const decodedToken = this.jwt.decodeToken(token);
+        return decodedToken;
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+      }
+    }
+    return null;
   }
 
 
@@ -46,34 +61,24 @@ export class UtilityService {
 
 
   isLoggedIn(): boolean {
-    const token = localStorage.getItem('user');
-    console.log('Stored token:', token); // Agrega este log
-    if (token) {
-      try {
-        // Verifica que el token esté en el formato correcto
-        if (this.isTokenFormatValid(token)) {
-          return !this.jwt.isTokenExpired(token); // Verifica si el token está expirado
-        } else {
-          console.error('Token format is invalid');
-          return false;
-        }
-      } catch (error) {
-        console.error('Error parsing token:', error);
-        return false;
-      }
+    const token = localStorage.getItem('token');
+    if (token && !this.jwt.isTokenExpired(token)) {
+      return true;
     }
     return false;
   }
 
-  private isTokenFormatValid(token: string): boolean {
-    const parts = token.split('.');
-    return parts.length === 3;
-  }
+  // private isTokenFormatValid(token: string): boolean {
+  //   const parts = token.split('.');
+  //   return parts.length === 3;
+  // }
 
 
 
-  logoutUser() {
-    localStorage.removeItem('user');
+
+  logoutUser():void {
+    localStorage.removeItem('token');
+    this.router.navigate(['/home']);
   }
 
   addToCart(product: Product) {
@@ -149,8 +154,8 @@ export class UtilityService {
     return null;
   }
 
-  isUserAdmin() {
+  isAdmin(): boolean {
     const user = this.getUser();
-    return user && user.idRole === 1;
+    return user && user.idRole === '1';
   }
 }

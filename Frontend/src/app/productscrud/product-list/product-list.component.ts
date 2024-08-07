@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProductService } from './product.service';
-import { Product } from '../models/models';
+import { ProductService } from '../product.service';
+import { Product } from '../../models/models';
 
 @Component({
   selector: 'app-product-list',
-  templateUrl: './product-list.component.html'
+  templateUrl: './product-list.component.html',
+  styleUrls: ['./product-list.component.css'],
+
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
@@ -22,6 +24,8 @@ export class ProductListComponent implements OnInit {
   loadProducts(): void {
     this.productService.getProducts().subscribe(products => {
       this.products = products;
+      console.log(products);
+
     });
   }
 

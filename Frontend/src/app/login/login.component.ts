@@ -54,49 +54,55 @@ export class LoginComponent implements OnInit {
   //       }
   //     });
   // }
-  // login() {
-  //   this.navigationService
-  //     .loginUser(this.Email.value, this.PWD.value)
-  //     .subscribe((res: any) => {
-  //       if (res && res.id && res.idRole) {
-  //         this.message = 'Logged In Successfully.';
-  //         this.utilityService.setUser(res);
-  //         console.log(this.utilityService.getUser());
-  //         this.isLoggedIn = true;
-
-  //         if (res.idRole === 1) {
-  //           // User is an admin
-  //           this.router.navigate(['/admin']);
-  //         } else {
-  //           // User is not an admin
-  //           this.router.navigate(['/home']);
-  //         }
-  //       } else {
-  //         this.message = 'Invalid Credentials!';
-  //       }
-  //       console.log(localStorage.getItem('user'));
-  //     });
-  // }
   login() {
-    this.navigationService.loginUser(this.Email.value, this.PWD.value).subscribe(
-      () => {
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.navigationService
+      .loginUser(this.Email.value, this.PWD.value)
+      .subscribe((res: any) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+          const decodedToken = this.utilityService.getUser();
+          if (decodedToken && decodedToken.id && decodedToken.idRole) {
+            this.message = 'Logged In Successfully.';
+            console.log(decodedToken);
+            this.isLoggedIn = true;
 
-        if (user.idRole === '2') {
-          this.message = 'Logged In Successfully.';
-          this.router.navigate(['/home']);
-        } else if (user.idRole === '1') {
-          this.message = 'Logged In Successfully.';
-          this.router.navigate(['/admin']);
+            if (decodedToken.idRole === '1') {
+              // User is an admin
+              this.router.navigate(['/admin']);
+            } else {
+              // User is not an admin
+              this.router.navigate(['/home']);
+            }
+          } else {
+            this.message = 'Invalid Credentials!';
+          }
+        } else {
+          this.message = 'Invalid Credentials!';
         }
-
-      },
-      (error) => {
-        console.error('Login error', error);
-        alert('Login failed. Invalid email or password.');
-      }
-    );
+        console.log(localStorage.getItem('token'));
+      });
   }
+
+  // login() {
+  //   this.navigationService.loginUser(this.Email.value, this.PWD.value).subscribe(
+  //     () => {
+  //       const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  //       if (user.idRole === '2') {
+  //         this.message = 'Logged In Successfully.';
+  //         this.router.navigate(['/home']);
+  //       } else if (user.idRole === '1') {
+  //         this.message = 'Logged In Successfully.';
+  //         this.router.navigate(['/admin']);
+  //       }
+
+  //     },
+  //     (error) => {
+  //       console.error('Login error', error);
+  //       alert('Login failed. Invalid email or password.');
+  //     }
+  //   );
+  // }
 
 
   get Email(): FormControl {

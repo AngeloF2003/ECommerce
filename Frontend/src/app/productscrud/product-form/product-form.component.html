@@ -53,14 +53,18 @@
     <div class="form-group">
       <label for="imageUpload" class="image-upload-label">
         <input type="file" id="imageUpload" (change)="onImageChange($event)" />
-        <span class="upload-text btn btn-primary">Upload Image</span>
+
+
       </label>
       <div *ngIf="product.imageName" class="image-preview">
         <img [src]="product.imageName" alt="Product Image" />
       </div>
     </div>
 
-    <!-- Submit Button -->
-    <button type="submit" class="submit-btn">{{ isEditMode ? 'Update Product' : 'Add Product' }}</button>
+    <!-- Submit and Cancel Buttons -->
+    <div class="form-group d-flex justify-content-between">
+      <button type="submit" class="submit-btn btn btn-success">{{ isEditMode ? 'Update Product' : 'Add Product' }}</button>
+      <button type="button" class="cancel-btn btn btn-danger" (click)="cancel()">Cancel</button>
+    </div>
   </form>
 </div>

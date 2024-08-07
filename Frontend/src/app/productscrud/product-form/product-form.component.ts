@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../models/models';
+import { Product } from '../../models/models';
 import { environment } from 'src/environments/environment';
-import { ProductService } from './product.service';
+import { ProductService } from '../product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -61,7 +61,7 @@ export class ProductFormComponent implements OnInit {
         .subscribe(response => {
           console.log('Image URL:', response.data.url);
 
-          this.product.imageName = response.data.url; // Obtén la URL de la imagen cargada
+          this.product.imageName = response.data.url;
           console.log('Image URL:', this.product.imageName);
         }, error => {
           console.error('Image upload failed', error);
@@ -79,5 +79,8 @@ export class ProductFormComponent implements OnInit {
         this.router.navigate(['/admin']);
       });
     }
+  }
+  cancel() {
+    this.router.navigate(['/admin']);
   }
 }

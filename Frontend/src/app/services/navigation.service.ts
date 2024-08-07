@@ -66,46 +66,31 @@ export class NavigationService {
     return this.http.post<any>(url, { Email: email, Password: password }).pipe(
       tap((response) => {
         const token = response.token;
-        console.log('Response token:', token); // Log del token recibido
         if (typeof token === 'string') {
-          localStorage.setItem('user', token); // Almacena el token como una cadena
-          const decodedToken = this.decodeToken(token);
-          console.log('Decoded token:', decodedToken); // Log del token decodificado
-          const user = {
-            id: decodedToken.id,
-            firstName: decodedToken.firstName,
-            lastName: decodedToken.lastName,
-            address: decodedToken.address,
-            mobile: decodedToken.mobile,
-            email: decodedToken.email,
-            password: '',
-            createdAt: decodedToken.createdAt,
-            modifiedAt: decodedToken.modifiedAt,
-            idRole: decodedToken.idRole
-          };
-          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('token', token); // Guarda solo el token en `localStorage`
         } else {
-          console.error('Token no es una cadena:', token);
+          console.error('Token format is invalid:', token);
         }
       })
     );
   }
 
 
+
   // Función para decodificar el JWT
-  private decodeToken(token: string): any {
-    try {
-      const parts = token.split('.');
-      if (parts.length !== 3) {
-        throw new Error('JWT token is invalid.');
-      }
-      const decoded = atob(parts[1]); // Decodifica el payload
-      return JSON.parse(decoded);
-    } catch (e) {
-      console.error('Error decoding token:', e);
-      return {};
-    }
-  }
+  // private decodeToken(token: string): any {
+  //   try {
+  //     const parts = token.split('.');
+  //     if (parts.length !== 3) {
+  //       throw new Error('JWT token is invalid.');
+  //     }
+  //     const decoded = atob(parts[1]); // Decodifica el payload
+  //     return JSON.parse(decoded);
+  //   } catch (e) {
+  //     console.error('Error decoding token:', e);
+  //     return {};
+  //   }
+  // }
   submitReview(userid: number, productid: number, review: string) {
     let obj: any = {
       User: {

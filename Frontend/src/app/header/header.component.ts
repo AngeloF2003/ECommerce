@@ -22,14 +22,18 @@ export class HeaderComponent implements OnInit {
   @ViewChild('container', { read: ViewContainerRef, static: true })
   container!: ViewContainerRef;
   cartItems: number = 0;
-
+  userName: string | null = null;
   navigationList: NavigationItem[] = [];
+
   constructor(
     private navigationService: NavigationService,
     public utilityService: UtilityService
   ) {}
 
   ngOnInit(): void {
+
+    const user = this.utilityService.getUser();
+    this.userName = user ? user.firstName : null;
     // Get Category List
     this.navigationService.getCategoryList().subscribe((list: Category[]) => {
       for (let item of list) {
@@ -80,4 +84,5 @@ export class HeaderComponent implements OnInit {
       this.container.createComponent(componentType);
     }
   }
+
 }
