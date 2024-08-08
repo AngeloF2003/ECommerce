@@ -23,22 +23,7 @@ export class UtilityService {
     return finalPrice;
   }
 
-  // getUser(): User {
-  //   let token = this.jwt.decodeToken();
-  //   let user: User = {
-  //     id: token.id,
-  //     firstName: token.firstName,
-  //     lastName: token.lastName,
-  //     address: token.address,
-  //     mobile: token.mobile,
-  //     email: token.email,
-  //     password: '',
-  //     createdAt: token.createdAt,
-  //     modifiedAt: token.modifiedAt,
-  //     idRole: token.idRole
-  //   };
-  //   return user;
-  // }
+
   getUser() {
     const token = localStorage.getItem('token');
     if (token && !this.jwt.isTokenExpired(token)) {

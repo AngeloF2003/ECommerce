@@ -52,7 +52,19 @@ export class NavigationService {
     let url = this.baseurl + 'RegisterUser';
     return this.http.post(url, user, { responseType: 'text' });
   }
-
+ loginUser(email: string, password: string): Observable<any> {
+    let url = `${this.baseurl}LoginUser`;
+    return this.http.post<any>(url, { Email: email, Password: password }).pipe(
+      tap((response) => {
+        const token = response.token;
+        if (typeof token === 'string') {
+          localStorage.setItem('token', token);
+        } else {
+          console.error('Token format is invalid:', token);
+        }
+      })
+    );
+  }
   // loginUser(email: string, password: string) {
   //   let url = this.baseurl + 'LoginUser';
   //   return this.http.post(
@@ -61,36 +73,8 @@ export class NavigationService {
   //     { responseType: 'text' }
   //   );
   // }
-  loginUser(email: string, password: string): Observable<any> {
-    let url = `${this.baseurl}LoginUser`;
-    return this.http.post<any>(url, { Email: email, Password: password }).pipe(
-      tap((response) => {
-        const token = response.token;
-        if (typeof token === 'string') {
-          localStorage.setItem('token', token); // Guarda solo el token en `localStorage`
-        } else {
-          console.error('Token format is invalid:', token);
-        }
-      })
-    );
-  }
 
 
-
-  // Función para decodificar el JWT
-  // private decodeToken(token: string): any {
-  //   try {
-  //     const parts = token.split('.');
-  //     if (parts.length !== 3) {
-  //       throw new Error('JWT token is invalid.');
-  //     }
-  //     const decoded = atob(parts[1]); // Decodifica el payload
-  //     return JSON.parse(decoded);
-  //   } catch (e) {
-  //     console.error('Error decoding token:', e);
-  //     return {};
-  //   }
-  // }
   submitReview(userid: number, productid: number, review: string) {
     let obj: any = {
       User: {

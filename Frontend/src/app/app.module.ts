@@ -21,7 +21,6 @@ import { LoginComponent } from './login/login.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
-import { AdminComponent } from './admin/admin.component';
 import { ProductFormComponent } from './productscrud/product-form/product-form.component';
 import { ProductListComponent } from './productscrud/product-list/product-list.component';
 import { ProductService } from './productscrud/product.service';
@@ -44,7 +43,6 @@ import { AuthInterceptor } from './productscrud/auth';
     OpenProductDetailsDirective,
     RegisterComponent,
     LoginComponent,
-    AdminComponent,
     ProductListComponent,
     ProductFormComponent
   ],

@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   message = '';
-  isLoggedIn = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -64,19 +64,17 @@ export class LoginComponent implements OnInit {
           if (decodedToken && decodedToken.id && decodedToken.idRole) {
             this.message = 'Logged In Successfully.';
             console.log(decodedToken);
-            this.isLoggedIn = true;
 
             if (decodedToken.idRole === '1') {
-              // User is an admin
               this.router.navigate(['/admin']);
             } else {
-              // User is not an admin
               this.router.navigate(['/home']);
             }
           } else {
             this.message = 'Invalid Credentials!';
           }
-        } else {
+
+        }else {
           this.message = 'Invalid Credentials!';
         }
         console.log(localStorage.getItem('token'));

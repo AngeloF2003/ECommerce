@@ -21,7 +21,7 @@
           <td class="text-center">
             <img
               *ngIf="product.productCategory.subCategory && product.id"
-              [src]="'assets/Images/' + product.productCategory.subCategory + '/' + product.id + '/1.jpg'"
+              src="{{product.imageName}}"
               alt="{{ product.imageName }}"
               class="img-thumbnail"
               width="100"
